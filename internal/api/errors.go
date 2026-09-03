@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/local/sftpweb/internal/sftpconn"
+	"github.com/local/fetchr/internal/sftpconn"
 )
 
 type apiError struct {

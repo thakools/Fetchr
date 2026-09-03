@@ -15,8 +15,8 @@ func TestParseDefaultsRequireOIDCUnlessSkipLogin(t *testing.T) {
 }
 
 func TestParseEnvIsOverriddenByFlags(t *testing.T) {
-	t.Setenv("SFTPWEB_ADDR", ":9000")
-	t.Setenv("SFTPWEB_SESSION_TTL", "5m")
+	t.Setenv("FETCHR_ADDR", ":9000")
+	t.Setenv("FETCHR_SESSION_TTL", "5m")
 
 	c, err := Parse([]string{"--skip-login"})
 	if err != nil {
@@ -35,6 +35,18 @@ func TestParseEnvIsOverriddenByFlags(t *testing.T) {
 	}
 	if c.Addr != ":7000" {
 		t.Errorf("flag should win over env: Addr = %q", c.Addr)
+	}
+}
+
+func TestParseEnvFallbackSFTPWEB(t *testing.T) {
+	t.Setenv("SFTPWEB_ADDR", ":9001")
+
+	c, err := Parse([]string{"--skip-login"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if c.Addr != ":9001" {
+		t.Errorf("Addr = %q, want :9001", c.Addr)
 	}
 }
 

@@ -1,35 +1,35 @@
-{{- define "sftpweb.name" -}}
+{{- define "fetchr.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "sftpweb.fullname" -}}
+{{- define "fetchr.fullname" -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s" .Release.Name (include "sftpweb.name" .) | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name (include "fetchr.name" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "sftpweb.labels" -}}
+{{- define "fetchr.labels" -}}
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" }}
-{{ include "sftpweb.selectorLabels" . }}
+{{ include "fetchr.selectorLabels" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
-{{- define "sftpweb.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "sftpweb.name" . }}
+{{- define "fetchr.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "fetchr.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{- define "sftpweb.serviceAccountName" -}}
+{{- define "fetchr.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
-{{- default (include "sftpweb.fullname" .) .Values.serviceAccount.name -}}
+{{- default (include "fetchr.fullname" .) .Values.serviceAccount.name -}}
 {{- else -}}
 {{- default "default" .Values.serviceAccount.name -}}
 {{- end -}}
 {{- end -}}
 
-{{- define "sftpweb.secretName" -}}
-{{- default (include "sftpweb.fullname" .) .Values.secret.existingSecret -}}
+{{- define "fetchr.secretName" -}}
+{{- default (include "fetchr.fullname" .) .Values.secret.existingSecret -}}
 {{- end -}}

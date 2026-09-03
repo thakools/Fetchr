@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/local/sftpweb/internal/auth"
-	"github.com/local/sftpweb/internal/sftpconn"
+	"github.com/local/fetchr/internal/auth"
+	"github.com/local/fetchr/internal/sftpconn"
 )
 
 // browseRoot is the boundary for path sanitisation. The remote SFTP server remains

@@ -1,4 +1,4 @@
-module github.com/local/sftpweb
+module github.com/local/fetchr
 
 go 1.27.1
 

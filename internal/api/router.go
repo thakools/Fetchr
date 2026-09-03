@@ -7,8 +7,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	"github.com/local/sftpweb/internal/auth"
-	"github.com/local/sftpweb/internal/sftpconn"
+	"github.com/local/fetchr/internal/auth"
+	"github.com/local/fetchr/internal/sftpconn"
 )
 
 type Server struct {

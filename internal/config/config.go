@@ -1,4 +1,4 @@
-// Package config parses runtime configuration from flags with SFTPWEB_* env fallbacks.
+// Package config parses runtime configuration from flags with FETCHR_* (or SFTPWEB_*) env fallbacks.
 package config
 
 import (
@@ -37,7 +37,7 @@ type Config struct {
 
 // Parse reads args (excluding program name) and the process environment.
 func Parse(args []string) (*Config, error) {
-	fs := flag.NewFlagSet("sftpweb", flag.ContinueOnError)
+	fs := flag.NewFlagSet("fetchr", flag.ContinueOnError)
 	c := &Config{}
 
 	fs.StringVar(&c.Addr, "addr", env("ADDR", ":8080"), "HTTP listen address")
@@ -108,6 +108,9 @@ func (c *Config) validate() error {
 }
 
 func env(key, def string) string {
+	if v, ok := os.LookupEnv("FETCHR_" + key); ok {
+		return v
+	}
 	if v, ok := os.LookupEnv("SFTPWEB_" + key); ok {
 		return v
 	}

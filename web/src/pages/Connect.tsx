@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ThemeToggle } from '@/components/ThemeToggle'
 
-const RECENT_KEY = 'sftpweb.lastTarget'
+const RECENT_KEY = 'fetchr.lastTarget'
+const LEGACY_RECENT_KEY = 'sftpweb.lastTarget'
 
 interface Recent {
   host: string
@@ -20,7 +21,7 @@ interface Recent {
 
 function loadRecent(): Recent {
   try {
-    const raw = localStorage.getItem(RECENT_KEY)
+    const raw = localStorage.getItem(RECENT_KEY) || localStorage.getItem(LEGACY_RECENT_KEY)
     if (raw) return { port: 22, ...JSON.parse(raw) }
   } catch {
     /* ignore malformed storage */

@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/local/sftpweb/internal/auth"
+	"github.com/local/fetchr/internal/auth"
 )
 
 type meResponse struct {

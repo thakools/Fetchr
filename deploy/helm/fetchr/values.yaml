@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: sftpweb
+  repository: fetchr
   tag: ""            # defaults to .Chart.AppVersion
   pullPolicy: IfNotPresent
 
@@ -30,7 +30,7 @@ app:
 
 oidc:
   issuer: https://keycloak.example.com/realms/applications
-  clientId: sftpweb
+  clientId: fetchr
   # Public URL of the callback endpoint.
   redirectUrl: https://sftp.example.com/api/auth/callback
   scopes: "openid,profile,email"
@@ -58,14 +58,14 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/session-cookie-name: sftpweb-route
+    nginx.ingress.kubernetes.io/session-cookie-name: fetchr-route
   hosts:
     - host: sftp.example.com
       paths:
         - path: /
           pathType: Prefix
   tls: []
-    # - secretName: sftpweb-tls
+    # - secretName: fetchr-tls
     #   hosts:
     #     - sftp.example.com
 

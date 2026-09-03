@@ -1,7 +1,7 @@
 .PHONY: help deps web build run dev test lint certs docker docker-amd64 docker-multi clean
 
-BINARY   := bin/sftpweb
-IMAGE    ?= sftpweb:dev
+BINARY   := bin/fetchr
+IMAGE    ?= fetchr:dev
 PLATFORM ?= linux/amd64
 
 help:
@@ -15,7 +15,7 @@ web: ## Build the SPA into internal/web/dist
 	cd web && npm run build
 
 build: web ## Build the server binary with the SPA embedded
-	CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o $(BINARY) ./cmd/sftpweb
+	CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o $(BINARY) ./cmd/fetchr
 
 run: build ## Build and run with authentication disabled
 	$(BINARY) --skip-login --cookie-secure=false
@@ -24,7 +24,7 @@ dev: ## Run the Go server and the Vite dev server together
 	@$(MAKE) -j2 dev-api dev-web
 
 dev-api:
-	go run ./cmd/sftpweb --skip-login --cookie-secure=false
+	go run ./cmd/fetchr --skip-login --cookie-secure=false
 
 dev-web:
 	cd web && npm run dev

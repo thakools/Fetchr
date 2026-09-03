@@ -10,11 +10,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/local/sftpweb/internal/api"
-	"github.com/local/sftpweb/internal/auth"
-	"github.com/local/sftpweb/internal/config"
-	"github.com/local/sftpweb/internal/sftpconn"
-	"github.com/local/sftpweb/internal/web"
+	"github.com/local/fetchr/internal/api"
+	"github.com/local/fetchr/internal/auth"
+	"github.com/local/fetchr/internal/config"
+	"github.com/local/fetchr/internal/sftpconn"
+	"github.com/local/fetchr/internal/web"
 )
 
 func main() {

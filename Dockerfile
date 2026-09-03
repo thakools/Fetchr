@@ -24,10 +24,10 @@ COPY internal/ ./internal/
 COPY --from=web /src/internal/web/dist ./internal/web/dist
 ARG TARGETOS TARGETARCH
 RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} \
-    go build -trimpath -ldflags="-s -w" -o /out/sftpweb ./cmd/sftpweb
+    go build -trimpath -ldflags="-s -w" -o /out/fetchr ./cmd/fetchr
 
 FROM gcr.io/distroless/static-debian12:nonroot
-COPY --from=build /out/sftpweb /sftpweb
+COPY --from=build /out/fetchr /fetchr
 USER nonroot:nonroot
 EXPOSE 8080
-ENTRYPOINT ["/sftpweb"]
+ENTRYPOINT ["/fetchr"]

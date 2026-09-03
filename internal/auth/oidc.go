@@ -16,7 +16,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const stateCookie = "sftpweb_oauth"
+const stateCookie = "fetchr_oauth"
 const stateTTL = 10 * time.Minute
 
 // Provider wraps the Keycloak OIDC endpoints and the authorization code + PKCE flow.

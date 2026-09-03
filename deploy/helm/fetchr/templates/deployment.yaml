@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "sftpweb.fullname" . }}
+  name: {{ include "fetchr.fullname" . }}
   labels:
-    {{- include "sftpweb.labels" . | nindent 4 }}
+    {{- include "fetchr.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "sftpweb.selectorLabels" . | nindent 6 }}
+      {{- include "fetchr.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -19,7 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "sftpweb.selectorLabels" . | nindent 8 }}
+        {{- include "fetchr.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -28,11 +28,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "sftpweb.serviceAccountName" . }}
+      serviceAccountName: {{ include "fetchr.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: sftpweb
+        - name: fetchr
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
@@ -42,18 +42,18 @@ spec:
               containerPort: 8080
           envFrom:
             - configMapRef:
-                name: {{ include "sftpweb.fullname" . }}
+                name: {{ include "fetchr.fullname" . }}
           env:
-            - name: SFTPWEB_SESSION_SECRET
+            - name: FETCHR_SESSION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "sftpweb.secretName" . }}
+                  name: {{ include "fetchr.secretName" . }}
                   key: session-secret
             {{- if not .Values.app.skipLogin }}
-            - name: SFTPWEB_OIDC_CLIENT_SECRET
+            - name: FETCHR_OIDC_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "sftpweb.secretName" . }}
+                  name: {{ include "fetchr.secretName" . }}
                   key: oidc-client-secret
             {{- end }}
           livenessProbe:

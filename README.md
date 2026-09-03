@@ -1,4 +1,4 @@
-# sftpweb
+# Fetchr
 
 A Filestash-style web client for SFTP servers. Users sign in with Keycloak, enter SFTP
 credentials for any reachable host, and browse, upload, download, rename and delete files
@@ -34,7 +34,7 @@ Two terminals, or `make dev` for both at once:
 make deps
 
 # Terminal 1 — API on :8080, authentication disabled
-go run ./cmd/sftpweb --skip-login --cookie-secure=false
+go run ./cmd/fetchr --skip-login --cookie-secure=false
 
 # Terminal 2 — Vite dev server on :5173, proxying /api to :8080
 cd web && npm run dev
@@ -53,34 +53,34 @@ docker run --rm -p 2222:22 atmoz/sftp foo:pass:::upload
 
 ```sh
 make build          # builds the SPA into internal/web/dist, then the binary
-./bin/sftpweb --skip-login --cookie-secure=false
+./bin/fetchr --skip-login --cookie-secure=false
 ```
 
 Everything is served from `:8080`.
 
 ## Configuration
 
-Every flag has an `SFTPWEB_`-prefixed environment variable equivalent (uppercase, dashes to
-underscores). Flags take precedence over the environment.
+Every flag has a `FETCHR_`-prefixed environment variable equivalent (uppercase, dashes to
+underscores; `SFTPWEB_` is also supported for backwards compatibility). Flags take precedence over the environment.
 
 | Flag | Env | Default | Description |
 | --- | --- | --- | --- |
-| `--addr` | `SFTPWEB_ADDR` | `:8080` | HTTP listen address |
-| `--log-level` | `SFTPWEB_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, `error` |
-| `--skip-login` | `SFTPWEB_SKIP_LOGIN` | `false` | Bypass Keycloak entirely |
-| `--oidc-issuer` | `SFTPWEB_OIDC_ISSUER` | — | Keycloak realm URL |
-| `--oidc-client-id` | `SFTPWEB_OIDC_CLIENT_ID` | — | Client ID |
-| `--oidc-client-secret` | `SFTPWEB_OIDC_CLIENT_SECRET` | — | Client secret (confidential clients) |
-| `--oidc-redirect-url` | `SFTPWEB_OIDC_REDIRECT_URL` | — | Public URL of `/api/auth/callback` |
-| `--oidc-scopes` | `SFTPWEB_OIDC_SCOPES` | `openid,profile,email` | Requested scopes |
-| `--session-secret` | `SFTPWEB_SESSION_SECRET` | random | Signs the OAuth state cookie |
-| `--session-ttl` | `SFTPWEB_SESSION_TTL` | `30m` | Idle lifetime of a session and its SFTP connection |
-| `--cookie-secure` | `SFTPWEB_COOKIE_SECURE` | `true` | Set `Secure` on cookies; turn off for plain HTTP |
-| `--max-upload-size` | `SFTPWEB_MAX_UPLOAD_SIZE` | `5GiB` | Per-file upload cap |
-| `--allowed-hosts` | `SFTPWEB_ALLOWED_HOSTS` | *(any)* | Comma-separated SFTP host allowlist |
-| `--max-connections` | `SFTPWEB_MAX_CONNECTIONS` | `200` | Concurrent SFTP connection ceiling |
-| `--dial-timeout` | `SFTPWEB_DIAL_TIMEOUT` | `10s` | SFTP dial timeout |
-| `--insecure-host-key` | `SFTPWEB_INSECURE_HOST_KEY` | `true` | Skip SSH host key verification |
+| `--addr` | `FETCHR_ADDR` | `:8080` | HTTP listen address |
+| `--log-level` | `FETCHR_LOG_LEVEL` | `info` | `debug`, `info`, `warn`, `error` |
+| `--skip-login` | `FETCHR_SKIP_LOGIN` | `false` | Bypass Keycloak entirely |
+| `--oidc-issuer` | `FETCHR_OIDC_ISSUER` | — | Keycloak realm URL |
+| `--oidc-client-id` | `FETCHR_OIDC_CLIENT_ID` | — | Client ID |
+| `--oidc-client-secret` | `FETCHR_OIDC_CLIENT_SECRET` | — | Client secret (confidential clients) |
+| `--oidc-redirect-url` | `FETCHR_OIDC_REDIRECT_URL` | — | Public URL of `/api/auth/callback` |
+| `--oidc-scopes` | `FETCHR_OIDC_SCOPES` | `openid,profile,email` | Requested scopes |
+| `--session-secret` | `FETCHR_SESSION_SECRET` | random | Signs the OAuth state cookie |
+| `--session-ttl` | `FETCHR_SESSION_TTL` | `30m` | Idle lifetime of a session and its SFTP connection |
+| `--cookie-secure` | `FETCHR_COOKIE_SECURE` | `true` | Set `Secure` on cookies; turn off for plain HTTP |
+| `--max-upload-size` | `FETCHR_MAX_UPLOAD_SIZE` | `5GiB` | Per-file upload cap |
+| `--allowed-hosts` | `FETCHR_ALLOWED_HOSTS` | *(any)* | Comma-separated SFTP host allowlist |
+| `--max-connections` | `FETCHR_MAX_CONNECTIONS` | `200` | Concurrent SFTP connection ceiling |
+| `--dial-timeout` | `FETCHR_DIAL_TIMEOUT` | `10s` | SFTP dial timeout |
+| `--insecure-host-key` | `FETCHR_INSECURE_HOST_KEY` | `true` | Skip SSH host key verification |
 
 `--oidc-*` flags are required unless `--skip-login` is set.
 
@@ -90,7 +90,7 @@ production — the Helm chart does this for you.
 
 ## Keycloak setup
 
-1. In your realm, create a client (e.g. `sftpweb`).
+1. In your realm, create a client (e.g. `fetchr`).
 2. Client authentication: **On** (confidential). Copy the secret from the *Credentials* tab.
 3. Standard flow: **On**. Direct access grants: **Off**.
 4. Valid redirect URIs: `https://sftp.example.com/api/auth/callback`
@@ -99,9 +99,9 @@ production — the Helm chart does this for you.
 Then run:
 
 ```sh
-./bin/sftpweb \
+./bin/fetchr \
   --oidc-issuer https://keycloak.example.com/realms/applications \
-  --oidc-client-id sftpweb \
+  --oidc-client-id fetchr \
   --oidc-client-secret "$CLIENT_SECRET" \
   --oidc-redirect-url https://sftp.example.com/api/auth/callback \
   --session-secret "$SESSION_SECRET"
@@ -136,8 +136,8 @@ All `/api/sftp/*` routes require a session cookie and return `{"code","message"}
 ```sh
 make docker                        # host architecture
 make docker-amd64                  # linux/amd64
-make docker-multi IMAGE=registry.example.com/sftpweb:0.1.0   # multi-arch, pushed
-docker run --rm -p 8080:8080 sftpweb:dev --skip-login --cookie-secure=false
+make docker-multi IMAGE=registry.example.com/fetchr:0.1.0   # multi-arch, pushed
+docker run --rm -p 8080:8080 fetchr:dev --skip-login --cookie-secure=false
 ```
 
 The image is distroless, runs as UID 65532, and needs no writable filesystem.
@@ -183,12 +183,12 @@ export NODE_EXTRA_CA_CERTS=$PWD/certs/corporate-ca.crt
 ## Kubernetes
 
 ```sh
-helm upgrade --install sftpweb deploy/helm/sftpweb \
-  --namespace sftpweb --create-namespace \
-  --set image.repository=registry.example.com/sftpweb \
+helm upgrade --install fetchr deploy/helm/fetchr \
+  --namespace fetchr --create-namespace \
+  --set image.repository=registry.example.com/fetchr \
   --set image.tag=0.1.0 \
   --set oidc.issuer=https://keycloak.example.com/realms/applications \
-  --set oidc.clientId=sftpweb \
+  --set oidc.clientId=fetchr \
   --set oidc.redirectUrl=https://sftp.example.com/api/auth/callback \
   --set secret.oidcClientSecret="$CLIENT_SECRET" \
   --set ingress.enabled=true \
@@ -202,7 +202,7 @@ across upgrades.
 
 Notable values: `app.skipLogin`, `app.allowedHosts`, `app.maxUploadSize`, `service.sessionAffinity`,
 `ingress.annotations`, `autoscaling.enabled`, `networkPolicy.enabled`. See
-[deploy/helm/sftpweb/values.yaml](deploy/helm/sftpweb/values.yaml).
+[deploy/helm/fetchr/values.yaml](deploy/helm/fetchr/values.yaml).
 
 ### Scaling
 
@@ -233,7 +233,7 @@ If you swap in a different ingress controller, configure equivalent affinity.
 
 ```sh
 make test        # go vet, go test, tsc --noEmit
-helm lint deploy/helm/sftpweb
+helm lint deploy/helm/fetchr
 ```
 
 ## Not implemented

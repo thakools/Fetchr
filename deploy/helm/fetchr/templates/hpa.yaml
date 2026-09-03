@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "sftpweb.fullname" . }}
+  name: {{ include "fetchr.fullname" . }}
   labels:
-    {{- include "sftpweb.labels" . | nindent 4 }}
+    {{- include "fetchr.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "sftpweb.fullname" . }}
+    name: {{ include "fetchr.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

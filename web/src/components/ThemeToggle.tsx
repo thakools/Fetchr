@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-const KEY = 'sftpweb.theme'
+const KEY = 'fetchr.theme'
+const LEGACY_KEY = 'sftpweb.theme'
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(() => localStorage.getItem(KEY) !== 'light')
+  const [dark, setDark] = useState(() => (localStorage.getItem(KEY) || localStorage.getItem(LEGACY_KEY)) !== 'light')
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)

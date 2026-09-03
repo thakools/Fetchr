@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const SessionCookie = "sftpweb_session"
+const SessionCookie = "fetchr_session"
 
 type Identity struct {
 	Subject  string `json:"subject"`
