@@ -184,7 +184,7 @@ export default function Files() {
       <header className="flex flex-wrap items-center gap-3 border-b px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold">
           <ServerCog className="h-4 w-4 text-primary" />
-          SFTP Web
+          Fetchr
         </div>
         {status.data?.connected && (
           <span className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground">

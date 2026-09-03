@@ -36,7 +36,7 @@ export default function Landing() {
       <header className="relative flex items-center justify-between px-6 py-5">
         <div className="flex items-center gap-2 font-semibold">
           <FolderTree className="h-5 w-5 text-primary" />
-          SFTP Web
+          Fetchr
         </div>
         <ThemeToggle />
       </header>

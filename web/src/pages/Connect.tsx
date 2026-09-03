@@ -73,7 +73,7 @@ export default function Connect() {
       <header className="relative flex items-center justify-between border-b px-6 py-3">
         <div className="flex items-center gap-2 text-sm font-semibold">
           <ServerCog className="h-4 w-4 text-primary" />
-          SFTP Web
+          Fetchr
         </div>
         <div className="flex items-center gap-1">
           <span className="mr-2 text-sm text-muted-foreground">{session?.user?.name ?? session?.user?.username}</span>
