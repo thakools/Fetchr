@@ -1,0 +1,7 @@
+.git
+bin
+deploy
+web/node_modules
+internal/web/dist
+README.md
+Makefile

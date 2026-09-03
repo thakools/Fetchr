@@ -1,0 +1,24 @@
+sftpweb {{ .Chart.AppVersion }} is installed as {{ include "sftpweb.fullname" . }}.
+
+{{- if .Values.ingress.enabled }}
+URL:
+{{- range .Values.ingress.hosts }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}
+{{- end }}
+{{- else }}
+Port-forward to try it out:
+  kubectl --namespace {{ .Release.Namespace }} port-forward svc/{{ include "sftpweb.fullname" . }} 8080:{{ .Values.service.port }}
+{{- end }}
+
+{{ if .Values.app.skipLogin }}
+WARNING: app.skipLogin is true. Authentication is disabled and anyone who can reach
+this Service can open SFTP connections. Use it only for local testing.
+{{- else }}
+Register this redirect URI on the Keycloak client "{{ .Values.oidc.clientId }}":
+  {{ .Values.oidc.redirectUrl }}
+{{- end }}
+
+{{ if and (gt (int .Values.replicaCount) 1) (ne .Values.service.sessionAffinity "ClientIP") }}
+WARNING: replicaCount > 1 without ClientIP session affinity. SFTP connections are held
+in pod memory, so requests must be pinned to one pod.
+{{- end }}
