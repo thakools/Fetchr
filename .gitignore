@@ -7,3 +7,4 @@ web/tsconfig.tsbuildinfo
 certs/*.crt
 .DS_Store
 *.log
+.vscode/
