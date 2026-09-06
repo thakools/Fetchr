@@ -1,7 +1,7 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
-  repository: fetchr
+  repository: thakoolsri/fetchr
   tag: ""            # defaults to .Chart.AppVersion
   pullPolicy: IfNotPresent
 

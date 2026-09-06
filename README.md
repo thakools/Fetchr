@@ -1,6 +1,6 @@
 # Fetchr
 
-A Filestash-style web client for SFTP servers. Users sign in with Keycloak, enter SFTP
+A web client for SFTP servers. Users sign in with Keycloak, enter SFTP
 credentials for any reachable host, and browse, upload, download, rename and delete files
 from the browser.
 

@@ -2,8 +2,8 @@ apiVersion: v2
 name: fetchr
 description: Fetchr - A web-based SFTP client with Keycloak authentication
 type: application
-version: 0.1.0
-appVersion: "0.1.0"
+version: 1.0.1
+appVersion: "1.0.1"
 keywords:
   - sftp
   - keycloak
