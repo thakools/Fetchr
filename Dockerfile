@@ -5,12 +5,13 @@ RUN cat /certs/*.crt >> /etc/ssl/certs/ca-certificates.crt 2>/dev/null || true
 
 # Build stages always run on the native architecture; emulating the Go and Node
 # toolchains under QEMU corrupts downloads and crashes the compiler.
-FROM --platform=$BUILDPLATFORM node:22-alpine AS web
+# Node2Shell (CVE-2026-111497) is fixed in 22.23.4; pin the multi-arch index.
+FROM --platform=$BUILDPLATFORM node:22.23.4-alpine@sha256:fe4f6d74e20370acb04ad889077d14d0f64a9c8ea6a42bc60cddf1e844699914 AS web
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
 WORKDIR /src/web
-COPY web/package.json web/package-lock.json ./
-RUN npm ci
+COPY web/package.json web/package-lock.json web/.npmrc ./
+RUN node --version && npm ci
 COPY web/ ./
 RUN npm run build
 

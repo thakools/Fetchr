@@ -28,6 +28,11 @@ size is not bounded by server memory or disk.
 
 ## Local development
 
+Use Node 22.23.4 (pinned in `.nvmrc`), or a patched Node 24/26 release
+allowed by `web/package.json`. With nvm, run `nvm install` and `nvm use`
+from the repository root before installing frontend dependencies. Local and CI
+installs must run `npm ci` from `web/`; its `.npmrc` enforces the Node version.
+
 Two terminals, or `make dev` for both at once:
 
 ```sh
@@ -141,6 +146,25 @@ docker run --rm -p 8080:8080 fetchr:dev --skip-login --cookie-secure=false
 ```
 
 The image is distroless, runs as UID 65532, and needs no writable filesystem.
+
+### Node build runtime security
+
+Node is used only in the frontend build stage; the final image contains the Go
+binary and embedded static assets. The builder is pinned to Node 22.23.4 to
+include the fix for [Node2Shell (CVE-2026-111497)](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
+The other supported release lines require at least 24.22.1 or 26.12.1.
+Updating npm dependencies alone does not patch Node's bundled Brotli decoder.
+
+When updating the builder, verify the published image digest and update the
+Dockerfile pin, `.nvmrc`, and frontend engine constraints together. Rebuild with
+fresh base images and no cached build steps:
+
+```sh
+docker buildx build --pull --no-cache --progress=plain --load -t fetchr:dev .
+```
+
+The frontend install step prints the actual Node version in the build log.
+CI workers and developer machines must also use an allowed patched Node release.
 
 ### Cross-architecture builds
 
